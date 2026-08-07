@@ -1,0 +1,116 @@
+# ==========================================
+# macOS / Finder System Files
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+# ==========================================
+# Flutter / Dart General
+# ==========================================
+*.class
+*.log
+*.pyc
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.metadata
+
+# Flutter/Dart
+**/build/
+**/.dart_tool/
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/pubspec.lock          
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+
+
+# ==========================================
+# Android
+# ==========================================
+**/android/.gradle/
+**/android/captures/
+**/android/local.properties
+**/android/key.properties
+**/android/**/key.properties
+**/android/**/*.keystore
+**/android/**/*.jks
+**/android/app/build/
+**/android/**/build/
+
+
+# ==========================================
+# iOS / macOS
+# ==========================================
+**/ios/Pods/
+**/ios/Podfile.lock
+**/ios/.symlinks/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.fltprfx
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/flutter_assets/
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/DerivedData/
+
+**/macos/Pods/
+**/macos/Podfile.lock
+**/macos/Flutter/ephemeral/
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/.symlinks/
+
+
+# ==========================================
+# Linux / Windows / Web
+# ==========================================
+**/linux/flutter/ephemeral/
+**/windows/flutter/ephemeral/
+**/web/
+
+
+# ==========================================
+# Coverage & Test
+# ==========================================
+**/coverage/
+**/.test_coverage.dart
+**/test/.test_coverage.dart
+
+
+# ==========================================
+# Environment / Secrets
+# ==========================================
+**/.env
+**/.env.*
+!**/.env.example
+**/*.env
+!**/*.env.example
+**/secrets/
+**/google-services.json          # Android
+**/GoogleService-Info.plist      # iOS
