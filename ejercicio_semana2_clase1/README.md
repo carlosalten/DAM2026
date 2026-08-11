@@ -1,4 +1,4 @@
-# ejercicio1
+# ejercicio_semana2_clase1
 
 A new Flutter project.
 
