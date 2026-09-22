@@ -1,5 +1,8 @@
+import 'package:f1_cliente/pages/equipo_detalle.dart';
 import 'package:f1_cliente/services/f1_service.dart';
+import 'package:f1_cliente/utils/color_desde_hex.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 class TabEquipos extends StatelessWidget {
   const TabEquipos({super.key});
@@ -19,10 +22,24 @@ class TabEquipos extends StatelessWidget {
           separatorBuilder: (context, index) => Divider(),
           itemCount: equipos.length,
           itemBuilder: (context, index) {
+            var equipo = equipos[index];
+            Color colorEquipo = colorDesdeHex(equipo['color']);
             return ListTile(
-              leading: Icon(Icons.car_crash),
-              title: Text(equipos[index]['nombre']),
-              subtitle: Text('Jefe de equipo: ${equipos[index]['jefe']}'),
+              leading: Icon(MdiIcons.carSports, size: 30, color: colorEquipo),
+              title: Text(equipo['nombre']),
+              subtitle: Text('Jefe de equipo: ${equipo['jefe']}'),
+              onTap: () {
+                // print('EquipoId: ${equipo['id']}');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EquipoDetalle(
+                      equipoId: equipo['id'],
+                      colorEquipo: colorEquipo,
+                    ),
+                  ),
+                );
+              },
             );
           },
         );

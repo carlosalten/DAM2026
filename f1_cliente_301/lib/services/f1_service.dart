@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -8,8 +9,17 @@ class F1Service {
     var respuesta = await http.get(Uri.parse('$_apiURL/equipos'));
 
     if (respuesta.statusCode == 200) {
-      return json.decode(respuesta.body);
+      return json.decode(respuesta.body)['data'];
     }
     return [];
+  }
+
+  Future<LinkedHashMap<String, dynamic>> equipo(int equipoId) async {
+    var respuesta = await http.get(Uri.parse('$_apiURL/equipos/$equipoId'));
+
+    if (respuesta.statusCode == 200) {
+      return json.decode(respuesta.body)['data'];
+    }
+    return LinkedHashMap();
   }
 }
