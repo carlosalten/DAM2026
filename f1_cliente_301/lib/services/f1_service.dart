@@ -22,4 +22,27 @@ class F1Service {
     }
     return LinkedHashMap();
   }
+
+  Future<LinkedHashMap<String, dynamic>> agregarEquipo(
+    String nombre,
+    String jefe,
+    String color,
+    String pais,
+  ) async {
+    var respuesta = await http.post(
+      Uri.parse('$_apiURL/equipos'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode({
+        'nombre': nombre,
+        'jefe': jefe,
+        'color': color,
+        'pais': pais,
+      }),
+    );
+
+    return json.decode(respuesta.body);
+  }
 }

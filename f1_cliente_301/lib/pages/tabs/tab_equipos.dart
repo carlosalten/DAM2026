@@ -19,6 +19,7 @@ class _TabEquiposState extends State<TabEquipos> {
   final colorCtrl = TextEditingController();
   String? paisSeleccionado;
   final formAgregar = GlobalKey<FormState>();
+  bool guardando = false;
 
   //limpiar de la memoria los controllers si el
   //usuario cambia de página
@@ -50,6 +51,7 @@ class _TabEquiposState extends State<TabEquipos> {
         var equipos = snapshot.data;
         return Scaffold(
           body: ListView.separated(
+            physics: BouncingScrollPhysics(),
             separatorBuilder: (context, index) => Divider(),
             itemCount: equipos.length,
             itemBuilder: (context, index) {
@@ -115,6 +117,7 @@ class _TabEquiposState extends State<TabEquipos> {
                         SizedBox(height: 10),
                         //pais
                         DropdownButtonFormField<String>(
+                          dropdownColor: kTextColor,
                           decoration: InputDecoration(labelText: 'País'),
                           isExpanded: true,
                           menuMaxHeight: 300,
@@ -138,7 +141,38 @@ class _TabEquiposState extends State<TabEquipos> {
                       },
                       child: Text('Cancelar'),
                     ),
-                    FilledButton(onPressed: () {}, child: Text('Agregar')),
+                    FilledButton(
+                      onPressed: () async {
+                        //si está guardando aún ignorar el click en botón.
+                        if (guardando) return;
+                        guardando = true;
+
+                        try {
+                          var respuesta = await F1Service().agregarEquipo(
+                            nombreCtrl.text.trim(),
+                            jefeCtrl.text.trim(),
+                            colorCtrl.text.trim(),
+                            paisSeleccionado!,
+                          );
+
+                          //si el usuario salió de la página (!mounted)
+                          //o el usuario cerró el diálogo (!dialogContext.mounted)
+                          //no continuar para prevenir nullPointerException
+                          if (!mounted || !dialogContext.mounted) return;
+
+                          //respuesta trae errores de validación
+                          //pendiente de implementar
+                          if (respuesta.containsKey('errors')) return;
+
+                          //insertó bien, cerrar diálogo y actualizar página
+                          Navigator.pop(dialogContext);
+                          setState(() {});
+                        } finally {
+                          guardando = false;
+                        }
+                      },
+                      child: Text('Agregar'),
+                    ),
                   ],
                 ),
               ).then((_) => _limpiarForm());
