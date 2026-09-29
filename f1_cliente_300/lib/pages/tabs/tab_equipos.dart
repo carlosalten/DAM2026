@@ -19,6 +19,7 @@ class _TabEquiposState extends State<TabEquipos> {
   final colorCtrl = TextEditingController();
   String? paisSeleccionado;
   final formAgregar = GlobalKey<FormState>();
+  bool guardando = false;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +125,35 @@ class _TabEquiposState extends State<TabEquipos> {
                       onPressed: () => Navigator.pop(dialogContext),
                       child: Text('Cancelar'),
                     ),
-                    FilledButton(onPressed: () {}, child: Text('Agregar')),
+                    FilledButton(
+                      onPressed: () async {
+                        if (guardando) return;
+                        guardando = true;
+
+                        try {
+                          var respuesta = await F1Service().agregarEquipo(
+                            nombreCtrl.text.trim(),
+                            jefeCtrl.text.trim(),
+                            colorCtrl.text.trim(),
+                            paisSeleccionado!,
+                          );
+
+                          //si es usuario salió de la página
+                          //o salió de AlertDialog
+                          //detener función
+                          if (!mounted || !dialogContext.mounted) return;
+
+                          //si API retorna error, detener la ejecución
+                          if (respuesta.containsKey('errors')) return;
+
+                          Navigator.pop(dialogContext);
+                          setState(() {});
+                        } finally {
+                          guardando = false;
+                        }
+                      },
+                      child: Text('Agregar'),
+                    ),
                   ],
                 ),
               );
