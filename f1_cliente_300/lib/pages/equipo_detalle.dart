@@ -1,9 +1,10 @@
 import 'package:f1_cliente_300/constants.dart';
+import 'package:f1_cliente_300/pages/piloto_agregar.dart';
 import 'package:f1_cliente_300/services/f1_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
-class EquipoDetalle extends StatelessWidget {
+class EquipoDetalle extends StatefulWidget {
   const EquipoDetalle({
     super.key,
     required this.equipoId,
@@ -14,12 +15,17 @@ class EquipoDetalle extends StatelessWidget {
   final Color colorEquipo;
 
   @override
+  State<EquipoDetalle> createState() => _EquipoDetalleState();
+}
+
+class _EquipoDetalleState extends State<EquipoDetalle> {
+  @override
   Widget build(BuildContext context) {
     String titulo = 'Cargando...';
     Widget body = Center(child: CircularProgressIndicator());
 
     return FutureBuilder(
-      future: F1Service().equipo(equipoId),
+      future: F1Service().equipo(widget.equipoId),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           titulo = 'Error :(';
@@ -37,7 +43,7 @@ class EquipoDetalle extends StatelessWidget {
                   equipo['nombre'],
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                Divider(color: colorEquipo, thickness: 4),
+                Divider(color: widget.colorEquipo, thickness: 4),
                 Row(
                   children: [
                     Text('Jefe de equipo: '),
@@ -66,7 +72,7 @@ class EquipoDetalle extends StatelessWidget {
                         leading: Icon(
                           MdiIcons.racingHelmet,
                           size: 26,
-                          color: colorEquipo,
+                          color: widget.colorEquipo,
                         ),
                         title: Row(
                           children: [
@@ -81,6 +87,26 @@ class EquipoDetalle extends StatelessWidget {
                     },
                   ),
                 ),
+                Spacer(),
+                Container(
+                  margin: EdgeInsets.only(bottom: 30),
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PilotoAgregar(
+                          equipoId: widget.equipoId,
+                          colorEquipo: widget.colorEquipo,
+                        ),
+                      ),
+                    ).then((_) => setState(() {})),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: widget.colorEquipo,
+                    ),
+                    child: Text('Agregar Piloto'),
+                  ),
+                ),
               ],
             ),
           );
@@ -91,7 +117,7 @@ class EquipoDetalle extends StatelessWidget {
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [colorEquipo, kSecondaryColor],
+                  colors: [widget.colorEquipo, kSecondaryColor],
                 ),
               ),
             ),

@@ -45,4 +45,29 @@ class F1Service {
 
     return json.decode(respuesta.body);
   }
+
+  Future<LinkedHashMap<String, dynamic>> agregarPiloto(
+    String nombre,
+    String apellido,
+    int puntos,
+    String pais,
+    int equipoId,
+  ) async {
+    var respuesta = await http.post(
+      Uri.parse('$_apiURL/pilotos'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode({
+        'nombre': nombre,
+        'apellido': apellido,
+        'puntos': puntos,
+        'pais': pais,
+        'equipo_id': equipoId,
+      }),
+    );
+
+    return json.decode(respuesta.body);
+  }
 }
