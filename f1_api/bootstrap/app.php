@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,5 +17,16 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (ValidationException $e, Request $request) {
+            if (! $request->expectsJson()) {
+                return null;
+            }
+
+            $errors = array_map(fn (array $messages) => [$messages[0]], $e->errors());
+
+            return response()->json([
+                'message' => 'Los datos enviados no son válidos.',
+                'errors' => $errors,
+            ], $e->status);
+        });
     })->create();

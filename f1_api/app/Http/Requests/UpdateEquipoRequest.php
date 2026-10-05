@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class UpdateEquipoRequest extends FormRequest
 {
@@ -16,6 +18,22 @@ class UpdateEquipoRequest extends FormRequest
     }
 
     /**
+     * Normaliza nombre y jefe (primera letra de cada palabra en mayúscula) y color (mayúsculas) antes de validar.
+     */
+    protected function prepareForValidation(): void
+    {
+        foreach (['nombre', 'jefe'] as $campo) {
+            if (is_string($this->input($campo))) {
+                $this->merge([$campo => Str::title(trim($this->input($campo)))]);
+            }
+        }
+
+        if (is_string($this->input('color'))) {
+            $this->merge(['color' => Str::upper($this->input('color'))]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -23,10 +41,41 @@ class UpdateEquipoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => ['sometimes', 'required', 'string', 'max:100'],
-            'jefe' => ['sometimes', 'required', 'string', 'max:50'],
-            'pais' => ['sometimes', 'required', 'string', 'max:30'],
-            'color' => ['sometimes', 'required', 'string', 'regex:/^[0-9A-Fa-f]{6}$/'],
+            'nombre' => [
+                'bail',
+                'sometimes',
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('equipos', 'nombre')->ignore($this->route('equipo')),
+            ],
+            'jefe' => [
+                'bail',
+                'sometimes',
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('equipos', 'jefe')->ignore($this->route('equipo')),
+            ],
+            'pais' => ['bail', 'sometimes', 'required', 'string', 'max:30'],
+            'color' => ['bail', 'sometimes', 'required', 'string', 'regex:/^[0-9A-Fa-f]{6}$/'],
+        ];
+    }
+
+    /**
+     * Mensajes de error personalizados.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'required' => 'El campo :attribute es obligatorio.',
+            'string' => 'El campo :attribute debe ser un texto.',
+            'max' => 'El campo :attribute no puede tener más de :max caracteres.',
+            'nombre.unique' => 'Ya existe un equipo con ese nombre.',
+            'jefe.unique' => 'Ya existe un equipo con ese jefe.',
+            'color.regex' => 'El campo color debe ser un código hexadecimal de 6 caracteres, sin #.',
         ];
     }
 }
