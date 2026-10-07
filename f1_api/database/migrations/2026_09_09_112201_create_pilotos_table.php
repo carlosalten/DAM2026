@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('pais', 30);
             $table->unsignedTinyInteger('numero')->unique();
             $table->integer('puntos');
-            $table->foreignId('equipo_id')->constrained('equipos');
+            $table->foreignId('equipo_id')->constrained('equipos')->cascadeOnDelete();
         });
     }
 
