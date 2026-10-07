@@ -19,6 +19,7 @@ class PilotoResource extends JsonResource
             'nombre' => $this->nombre,
             'apellido' => $this->apellido,
             'pais' => $this->pais,
+            'numero' => $this->numero,
             'puntos' => $this->puntos,
             'equipo_id' => $this->equipo_id,
             'equipo' => EquipoResource::make($this->whenLoaded('equipo')),

@@ -20,9 +20,19 @@ class PilotoAgregar extends StatefulWidget {
 class _PilotoAgregarState extends State<PilotoAgregar> {
   final nombreCtrl = TextEditingController();
   final apellidoCtrl = TextEditingController();
+  final numeroCtrl = TextEditingController();
   final puntosCtrl = TextEditingController();
   String? paisSeleccionado;
   bool guardando = false;
+
+  @override
+  void dispose() {
+    nombreCtrl.dispose();
+    apellidoCtrl.dispose();
+    numeroCtrl.dispose();
+    puntosCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +75,12 @@ class _PilotoAgregarState extends State<PilotoAgregar> {
                     ),
                     SizedBox(height: 10),
                     TextFormField(
+                      controller: numeroCtrl,
+                      decoration: InputDecoration(labelText: 'Número del Auto'),
+                      keyboardType: TextInputType.number,
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
                       controller: puntosCtrl,
                       decoration: InputDecoration(labelText: 'Puntos'),
                       keyboardType: TextInputType.number,
@@ -101,6 +117,7 @@ class _PilotoAgregarState extends State<PilotoAgregar> {
                       var respuesta = await F1Service().agregarPiloto(
                         nombreCtrl.text.trim(),
                         apellidoCtrl.text.trim(),
+                        int.tryParse(numeroCtrl.text.trim()) ?? 0,
                         int.tryParse(puntosCtrl.text.trim()) ?? 0,
                         paisSeleccionado!,
                         widget.equipoId,

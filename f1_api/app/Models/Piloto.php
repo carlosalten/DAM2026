@@ -9,7 +9,7 @@ class Piloto extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['nombre', 'apellido', 'pais', 'puntos', 'equipo_id'];
+    protected $fillable = ['nombre', 'apellido', 'pais', 'numero', 'puntos', 'equipo_id'];
 
     public function equipo(): BelongsTo
     {

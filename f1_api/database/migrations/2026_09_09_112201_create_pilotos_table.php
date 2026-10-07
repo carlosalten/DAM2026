@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre', 20);
             $table->string('apellido', 20);
             $table->string('pais', 30);
+            $table->unsignedTinyInteger('numero')->unique();
             $table->integer('puntos');
             $table->foreignId('equipo_id')->constrained('equipos');
         });

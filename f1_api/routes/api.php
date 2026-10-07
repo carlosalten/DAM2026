@@ -10,4 +10,5 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::apiResource('equipos', EquipoController::class);
+Route::get('pilotos/clasificacion', [PilotoController::class, 'clasificacion']);
 Route::apiResource('pilotos', PilotoController::class);

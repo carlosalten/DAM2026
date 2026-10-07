@@ -6,6 +6,7 @@ use App\Models\Piloto;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class UpdatePilotoRequest extends FormRequest
@@ -41,6 +42,7 @@ class UpdatePilotoRequest extends FormRequest
             'nombre' => ['bail', 'sometimes', 'required', 'string', 'max:20'],
             'apellido' => ['bail', 'sometimes', 'required', 'string', 'max:20'],
             'pais' => ['bail', 'sometimes', 'required', 'string', 'max:30'],
+            'numero' => ['bail', 'sometimes', 'required', 'integer', 'min:1', 'max:99', Rule::unique('pilotos', 'numero')->ignore($this->route('piloto'))],
             'puntos' => ['bail', 'sometimes', 'required', 'integer', 'min:0', 'max:1000'],
             'equipo_id' => ['bail', 'sometimes', 'required', 'integer', 'min:1', 'exists:equipos,id'],
         ];
@@ -90,6 +92,9 @@ class UpdatePilotoRequest extends FormRequest
             'nombre.max' => 'El campo nombre no puede tener más de :max caracteres.',
             'apellido.max' => 'El campo apellido no puede tener más de :max caracteres.',
             'pais.max' => 'El campo pais no puede tener más de :max caracteres.',
+            'numero.min' => 'El campo numero no puede ser menor que :min.',
+            'numero.max' => 'El campo numero no puede ser mayor que :max.',
+            'numero.unique' => 'Ya existe un piloto con ese número.',
             'puntos.min' => 'El campo puntos no puede ser menor que :min.',
             'puntos.max' => 'El campo puntos no puede ser mayor que :max.',
             'equipo_id.min' => 'El campo equipo_id no puede ser menor que :min.',

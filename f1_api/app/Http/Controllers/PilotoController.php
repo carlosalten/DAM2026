@@ -20,6 +20,16 @@ class PilotoController extends Controller
     }
 
     /**
+     * Lista los pilotos con su equipo, ordenados por puntos de mayor a menor.
+     */
+    public function clasificacion(): AnonymousResourceCollection
+    {
+        return PilotoResource::collection(
+            Piloto::with('equipo')->orderByDesc('puntos')->orderBy('apellido')->get()
+        );
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StorePilotoRequest $request): PilotoResource

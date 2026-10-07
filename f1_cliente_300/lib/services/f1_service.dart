@@ -49,6 +49,7 @@ class F1Service {
   Future<LinkedHashMap<String, dynamic>> agregarPiloto(
     String nombre,
     String apellido,
+    int numero,
     int puntos,
     String pais,
     int equipoId,
@@ -62,6 +63,7 @@ class F1Service {
       body: json.encode({
         'nombre': nombre,
         'apellido': apellido,
+        'numero': numero,
         'puntos': puntos,
         'pais': pais,
         'equipo_id': equipoId,
@@ -69,5 +71,14 @@ class F1Service {
     );
 
     return json.decode(respuesta.body);
+  }
+
+  Future<List<dynamic>> clasificacion() async {
+    var respuesta = await http.get(Uri.parse('$_apiURL/pilotos/clasificacion'));
+
+    if (respuesta.statusCode == 200) {
+      return json.decode(respuesta.body)['data'];
+    }
+    return [];
   }
 }
