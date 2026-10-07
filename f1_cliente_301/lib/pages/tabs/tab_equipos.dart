@@ -20,6 +20,7 @@ class _TabEquiposState extends State<TabEquipos> {
   String? paisSeleccionado;
   final formAgregar = GlobalKey<FormState>();
   bool guardando = false;
+  Map<String, dynamic> errores = {};
 
   //limpiar de la memoria los controllers si el
   //usuario cambia de página
@@ -36,6 +37,8 @@ class _TabEquiposState extends State<TabEquipos> {
     jefeCtrl.clear();
     colorCtrl.clear();
     paisSeleccionado = null;
+    errores = {};
+    guardando = false;
   }
 
   @override
@@ -81,99 +84,116 @@ class _TabEquiposState extends State<TabEquipos> {
               showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (dialogContext) => AlertDialog(
-                  backgroundColor: kTextColor,
-                  title: Text('Agregar Equipo', style: TextStyle(fontSize: 18)),
-                  content: Form(
-                    key: formAgregar,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        //nombre
-                        TextFormField(
-                          controller: nombreCtrl,
-                          decoration: InputDecoration(
-                            labelText: 'Nombre del equipo',
-                          ),
+                builder: (dialogContext) => StatefulBuilder(
+                  builder: (context, setDialogState) {
+                    return AlertDialog(
+                      backgroundColor: kTextColor,
+                      title: Text(
+                        'Agregar Equipo',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      content: Form(
+                        key: formAgregar,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            //nombre
+                            TextFormField(
+                              controller: nombreCtrl,
+                              decoration: InputDecoration(
+                                labelText: 'Nombre del equipo',
+                                errorText: errores['nombre']?[0],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            //jefe del equipo
+                            TextFormField(
+                              controller: jefeCtrl,
+                              decoration: InputDecoration(
+                                labelText: 'Jefe de equipo',
+                                errorText: errores['jefe']?[0],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            //color
+                            TextFormField(
+                              controller: colorCtrl,
+                              decoration: InputDecoration(
+                                labelText: 'Color (hex)',
+                                hintText: 'FF8000',
+                                errorText: errores['color']?[0],
+                              ),
+                              maxLength: 6,
+                            ),
+                            SizedBox(height: 10),
+                            //pais
+                            DropdownButtonFormField<String>(
+                              dropdownColor: kTextColor,
+                              decoration: InputDecoration(
+                                labelText: 'País',
+                                errorText: errores['pais']?[0],
+                              ),
+                              isExpanded: true,
+                              menuMaxHeight: 300,
+                              items: paises
+                                  .map(
+                                    (pais) => DropdownMenuItem(
+                                      value: pais,
+                                      child: Text(pais),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (pais) => paisSeleccionado = pais,
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 10),
-                        //jefe del equipo
-                        TextFormField(
-                          controller: jefeCtrl,
-                          decoration: InputDecoration(
-                            labelText: 'Jefe de equipo',
-                          ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                          },
+                          child: Text('Cancelar'),
                         ),
-                        SizedBox(height: 10),
-                        //color
-                        TextFormField(
-                          controller: colorCtrl,
-                          decoration: InputDecoration(
-                            labelText: 'Color (hex)',
-                            hintText: 'FF8000',
-                          ),
-                          maxLength: 6,
-                        ),
-                        SizedBox(height: 10),
-                        //pais
-                        DropdownButtonFormField<String>(
-                          dropdownColor: kTextColor,
-                          decoration: InputDecoration(labelText: 'País'),
-                          isExpanded: true,
-                          menuMaxHeight: 300,
-                          items: paises
-                              .map(
-                                (pais) => DropdownMenuItem(
-                                  value: pais,
-                                  child: Text(pais),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (pais) => paisSeleccionado = pais,
+                        FilledButton(
+                          onPressed: () async {
+                            //si está guardando aún ignorar el click en botón.
+                            if (guardando) return;
+                            guardando = true;
+
+                            try {
+                              var respuesta = await F1Service().agregarEquipo(
+                                nombreCtrl.text.trim(),
+                                jefeCtrl.text.trim(),
+                                colorCtrl.text.trim(),
+                                paisSeleccionado ?? '',
+                              );
+
+                              //si el usuario salió de la página (!mounted)
+                              //o el usuario cerró el diálogo (!dialogContext.mounted)
+                              //no continuar para prevenir nullPointerException
+                              if (!mounted || !dialogContext.mounted) return;
+
+                              //respuesta trae errores de validación
+                              if (respuesta.containsKey('errors')) {
+                                setDialogState(
+                                  () => errores = respuesta['errors'],
+                                );
+                                return;
+                              }
+
+                              //insertó bien, cerrar diálogo y actualizar página
+                              Navigator.pop(dialogContext);
+                              setState(() {});
+                            } finally {
+                              guardando = false;
+                            }
+                          },
+                          child: Text('Agregar'),
                         ),
                       ],
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(dialogContext);
-                      },
-                      child: Text('Cancelar'),
-                    ),
-                    FilledButton(
-                      onPressed: () async {
-                        //si está guardando aún ignorar el click en botón.
-                        if (guardando) return;
-                        guardando = true;
-
-                        try {
-                          var respuesta = await F1Service().agregarEquipo(
-                            nombreCtrl.text.trim(),
-                            jefeCtrl.text.trim(),
-                            colorCtrl.text.trim(),
-                            paisSeleccionado!,
-                          );
-
-                          //si el usuario salió de la página (!mounted)
-                          //o el usuario cerró el diálogo (!dialogContext.mounted)
-                          //no continuar para prevenir nullPointerException
-                          if (!mounted || !dialogContext.mounted) return;
-
-                          //respuesta trae errores de validación
-                          //pendiente de implementar
-                          if (respuesta.containsKey('errors')) return;
-
-                          //insertó bien, cerrar diálogo y actualizar página
-                          Navigator.pop(dialogContext);
-                          setState(() {});
-                        } finally {
-                          guardando = false;
-                        }
-                      },
-                      child: Text('Agregar'),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ).then((_) => _limpiarForm());
             },

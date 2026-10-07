@@ -24,6 +24,7 @@ class _PilotoAgregarState extends State<PilotoAgregar> {
   final puntosCtrl = TextEditingController();
   String? paisSeleccionado;
   bool guardando = false;
+  Map<String, dynamic> errores = {};
 
   @override
   void dispose() {
@@ -66,29 +67,44 @@ class _PilotoAgregarState extends State<PilotoAgregar> {
                   children: [
                     TextFormField(
                       controller: nombreCtrl,
-                      decoration: InputDecoration(labelText: 'Nombre'),
+                      decoration: InputDecoration(
+                        labelText: 'Nombre',
+                        errorText: errores['nombre']?[0],
+                      ),
                     ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: apellidoCtrl,
-                      decoration: InputDecoration(labelText: 'Apellido'),
+                      decoration: InputDecoration(
+                        labelText: 'Apellido',
+                        errorText: errores['apellido']?[0],
+                      ),
                     ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: numeroCtrl,
-                      decoration: InputDecoration(labelText: 'Número del Auto'),
+                      decoration: InputDecoration(
+                        labelText: 'Número del Auto',
+                        errorText: errores['numero']?[0],
+                      ),
                       keyboardType: TextInputType.number,
                     ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: puntosCtrl,
-                      decoration: InputDecoration(labelText: 'Puntos'),
+                      decoration: InputDecoration(
+                        labelText: 'Puntos',
+                        errorText: errores['puntos']?[0],
+                      ),
                       keyboardType: TextInputType.number,
                     ),
                     SizedBox(height: 10),
                     DropdownButtonFormField<String>(
                       dropdownColor: kTextColor,
-                      decoration: InputDecoration(labelText: 'País'),
+                      decoration: InputDecoration(
+                        labelText: 'País',
+                        errorText: errores['pais']?[0],
+                      ),
                       isExpanded: true,
                       menuMaxHeight: 300,
                       items: paises
@@ -118,14 +134,20 @@ class _PilotoAgregarState extends State<PilotoAgregar> {
                         nombreCtrl.text.trim(),
                         apellidoCtrl.text.trim(),
                         int.tryParse(numeroCtrl.text.trim()) ?? 0,
-                        int.tryParse(puntosCtrl.text.trim()) ?? 0,
-                        paisSeleccionado!,
+                        int.tryParse(puntosCtrl.text.trim()) ?? -1,
+                        paisSeleccionado ?? '',
                         widget.equipoId,
                       );
 
                       if (!context.mounted) return;
 
-                      if (respuesta.containsKey('errors')) return;
+                      if (respuesta.containsKey('errors')) {
+                        setState(() {
+                          errores = respuesta['errors'];
+                        });
+
+                        return;
+                      }
 
                       Navigator.pop(context);
                     } finally {
