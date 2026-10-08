@@ -1,6 +1,7 @@
 import 'package:f1_cliente_300/constants.dart';
 import 'package:f1_cliente_300/pages/tabs/tab_campeonato.dart';
 import 'package:f1_cliente_300/pages/tabs/tab_equipos.dart';
+import 'package:f1_cliente_300/pages/tabs/tab_pilotos.dart';
 import 'package:flutter/material.dart';
 
 class BasePage extends StatelessWidget {
@@ -9,7 +10,7 @@ class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
@@ -29,13 +30,16 @@ class BasePage extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Tab(text: 'Equipos'),
+              Tab(text: 'Pilotos'),
               Tab(text: 'Campeonato'),
             ],
           ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: TabBarView(children: [TabEquipos(), TabCampeonato()]),
+          child: TabBarView(
+            children: [TabEquipos(), TabPilotos(), TabCampeonato()],
+          ),
         ),
       ),
     );

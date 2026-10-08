@@ -14,6 +14,15 @@ class F1Service {
     return [];
   }
 
+  Future<List<dynamic>> pilotos() async {
+    var respuesta = await http.get(Uri.parse('$_apiURL/pilotos'));
+
+    if (respuesta.statusCode == 200) {
+      return json.decode(respuesta.body)['data'];
+    }
+    return [];
+  }
+
   Future<LinkedHashMap<String, dynamic>> equipo(int equipoId) async {
     var respuesta = await http.get(Uri.parse('$_apiURL/equipos/$equipoId'));
 
@@ -71,6 +80,24 @@ class F1Service {
     );
 
     return json.decode(respuesta.body);
+  }
+
+  Future<bool> borrarEquipo(int equipoId) async {
+    var respuesta = await http.delete(
+      Uri.parse('$_apiURL/equipos/$equipoId'),
+      headers: {'Accept': 'application/json'},
+    );
+
+    return respuesta.statusCode == 204;
+  }
+
+  Future<bool> borrarPiloto(int pilotoId) async {
+    var respuesta = await http.delete(
+      Uri.parse('$_apiURL/pilotos/$pilotoId'),
+      headers: {'Accept': 'application/json'},
+    );
+
+    return respuesta.statusCode == 204;
   }
 
   Future<List<dynamic>> clasificacion() async {

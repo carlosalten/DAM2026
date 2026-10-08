@@ -19,6 +19,8 @@ class EquipoDetalle extends StatefulWidget {
 }
 
 class _EquipoDetalleState extends State<EquipoDetalle> {
+  bool borrando = false;
+
   @override
   Widget build(BuildContext context) {
     String titulo = 'Cargando...';
@@ -82,6 +84,72 @@ class _EquipoDetalleState extends State<EquipoDetalle> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
+                        ),
+                        trailing: IconButton(
+                          onPressed: () => showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (alertDialogContext) => AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: Text(
+                                'Borrar Piloto',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              content: Text(
+                                '¿Confirma borrar el piloto ${piloto['nombre']} ${piloto['apellido']}?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(alertDialogContext),
+                                  child: Text('Cancelar'),
+                                ),
+                                FilledButton(
+                                  onPressed: () async {
+                                    if (borrando) return;
+                                    borrando = true;
+
+                                    final messenger = ScaffoldMessenger.of(
+                                      context,
+                                    );
+
+                                    try {
+                                      bool borradoOk = await F1Service()
+                                          .borrarPiloto(piloto['id']);
+                                      if (!mounted ||
+                                          !alertDialogContext.mounted) {
+                                        return;
+                                      }
+
+                                      messenger.showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: borradoOk
+                                              ? kSecondaryColor
+                                              : Colors.yellow.shade800,
+                                          content: Text(
+                                            borradoOk
+                                                ? 'Se borró el piloto ${piloto['nombre']} ${piloto['apellido']}'
+                                                : 'No se pudo borrar :(',
+                                          ),
+                                        ),
+                                      );
+
+                                      Navigator.pop(alertDialogContext);
+                                      setState(() {});
+                                    } finally {
+                                      borrando = false;
+                                    }
+                                  },
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: kPrimaryColor,
+                                  ),
+                                  child: Text('Borrar Piloto'),
+                                ),
+                              ],
+                            ),
+                          ),
+                          icon: Icon(MdiIcons.trashCan, color: kPrimaryColor),
                         ),
                       );
                     },

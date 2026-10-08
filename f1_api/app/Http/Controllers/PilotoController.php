@@ -16,7 +16,7 @@ class PilotoController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        return PilotoResource::collection(Piloto::with('equipo')->get());
+        return PilotoResource::collection(Piloto::with('equipo')->orderBy('apellido')->get());
     }
 
     /**

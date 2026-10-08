@@ -5,6 +5,7 @@ import 'package:f1_cliente_300/services/f1_service.dart';
 import 'package:f1_cliente_300/utils/color_desde_hex.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TabEquipos extends StatefulWidget {
   const TabEquipos({super.key});
@@ -57,22 +58,72 @@ class _TabEquiposState extends State<TabEquipos> {
             itemBuilder: (context, index) {
               var equipo = equipos[index];
               Color colorEquipo = colorDesdeHex(equipo['color']);
-              return ListTile(
-                leading: Icon(MdiIcons.carSports, size: 30, color: colorEquipo),
-                title: Text('${equipo['nombre']} (${equipo['pais']})'),
-                subtitle: Text('Jefe de equipo: ${equipo['jefe']}'),
-                onTap: () {
-                  // print('EquipoId: ${equipo['id']}');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EquipoDetalle(
-                        equipoId: equipo['id'],
-                        colorEquipo: colorEquipo,
-                      ),
+              return Slidable(
+                startActionPane: ActionPane(
+                  motion: ScrollMotion(),
+                  children: [
+                    SlidableAction(
+                      onPressed: (_) {},
+                      backgroundColor: Colors.blue,
+                      icon: MdiIcons.pen,
+                      label: 'Editar',
                     ),
-                  );
-                },
+                  ],
+                ),
+                endActionPane: ActionPane(
+                  motion: ScrollMotion(),
+                  children: [
+                    SlidableAction(
+                      onPressed: (_) async {
+                        final messenger = ScaffoldMessenger.of(context);
+                        bool borradoOk = await F1Service().borrarEquipo(
+                          equipo['id'],
+                        );
+                        if (!context.mounted) {
+                          return;
+                        }
+                        messenger.showSnackBar(
+                          SnackBar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: borradoOk
+                                ? kSecondaryColor
+                                : Colors.yellow.shade800,
+                            content: Text(
+                              borradoOk
+                                  ? 'Se borró el equipo ${equipo['nombre']}'
+                                  : 'No se pudo borrar :(',
+                            ),
+                          ),
+                        );
+                        setState(() {});
+                      },
+                      backgroundColor: kPrimaryColor,
+                      icon: MdiIcons.trashCan,
+                      label: 'Borrar',
+                    ),
+                  ],
+                ),
+                child: ListTile(
+                  leading: Icon(
+                    MdiIcons.carSports,
+                    size: 30,
+                    color: colorEquipo,
+                  ),
+                  title: Text('${equipo['nombre']} (${equipo['pais']})'),
+                  subtitle: Text('Jefe de equipo: ${equipo['jefe']}'),
+                  onTap: () {
+                    // print('EquipoId: ${equipo['id']}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EquipoDetalle(
+                          equipoId: equipo['id'],
+                          colorEquipo: colorEquipo,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           ),
