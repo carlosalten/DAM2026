@@ -14,6 +14,15 @@ class F1Service {
     return [];
   }
 
+  Future<List<dynamic>> pilotos() async {
+    var respuesta = await http.get(Uri.parse('$_apiURL/pilotos'));
+
+    if (respuesta.statusCode == 200) {
+      return json.decode(respuesta.body)['data'];
+    }
+    return [];
+  }
+
   Future<LinkedHashMap<String, dynamic>> equipo(int equipoId) async {
     var respuesta = await http.get(Uri.parse('$_apiURL/equipos/$equipoId'));
 

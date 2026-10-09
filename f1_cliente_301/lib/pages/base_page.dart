@@ -9,7 +9,7 @@ class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
@@ -32,6 +32,7 @@ class BasePage extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Tab(text: 'Equipos'),
+              Tab(text: 'Pilotos'),
               Tab(text: 'Campeonato'),
             ],
           ),
