@@ -32,50 +32,58 @@ class _TabPilotosState extends State<TabPilotos> {
               Color colorTexto = colorEquipo.computeLuminance() < 0.5
                   ? Colors.white
                   : Colors.black;
-              return Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [kSecondaryColor, colorEquipo],
-                    begin: AlignmentGeometry.topLeft,
-                    end: AlignmentGeometry.bottomRight,
-                  ),
-                ),
-                child: ListTile(
-                  leading: Container(
-                    height: 30,
-                    width: 30,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: colorEquipo,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Text(
-                      piloto['numero'].toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: colorTexto,
-                      ),
+              return Dismissible(
+                key: ValueKey(piloto['id']),
+                direction: DismissDirection.startToEnd,
+                onDismissed: (direction) async {
+                  await F1Service().borrarPiloto(piloto['id']);
+                  setState(() {});
+                },
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [kSecondaryColor, colorEquipo],
+                      begin: AlignmentGeometry.topLeft,
+                      end: AlignmentGeometry.bottomRight,
                     ),
                   ),
-                  title: Row(
-                    children: [
-                      Text(
-                        '${piloto['nombre']} ',
-                        style: TextStyle(color: Colors.white),
+                  child: ListTile(
+                    leading: Container(
+                      height: 30,
+                      width: 30,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: colorEquipo,
+                        borderRadius: BorderRadius.circular(5),
                       ),
-                      Text(
-                        piloto['apellido'],
+                      child: Text(
+                        piloto['numero'].toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          fontSize: 16,
+                          color: colorTexto,
                         ),
                       ),
-                    ],
-                  ),
-                  subtitle: Text(
-                    piloto['equipo']['nombre'],
-                    style: TextStyle(color: Colors.white),
+                    ),
+                    title: Row(
+                      children: [
+                        Text(
+                          '${piloto['nombre']} ',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          piloto['apellido'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(
+                      piloto['equipo']['nombre'],
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               );

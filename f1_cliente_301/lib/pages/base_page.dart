@@ -1,6 +1,7 @@
 import 'package:f1_cliente/constants.dart';
 import 'package:f1_cliente/pages/tabs/tab_campeonato.dart';
 import 'package:f1_cliente/pages/tabs/tab_equipos.dart';
+import 'package:f1_cliente/pages/tabs/tab_pilotos.dart';
 import 'package:flutter/material.dart';
 
 class BasePage extends StatelessWidget {
@@ -39,7 +40,9 @@ class BasePage extends StatelessWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: TabBarView(children: [TabEquipos(), TabCampeonato()]),
+          child: TabBarView(
+            children: [TabEquipos(), TabPilotos(), TabCampeonato()],
+          ),
         ),
       ),
     );

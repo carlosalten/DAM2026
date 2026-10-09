@@ -82,6 +82,24 @@ class F1Service {
     return json.decode(respuesta.body);
   }
 
+  Future<bool> borrarEquipo(int equipoId) async {
+    var respuesta = await http.delete(
+      Uri.parse('$_apiURL/equipos/$equipoId'),
+      headers: {'Accept': 'application/json'},
+    );
+
+    return respuesta.statusCode == 204;
+  }
+
+  Future<bool> borrarPiloto(int pilotoId) async {
+    var respuesta = await http.delete(
+      Uri.parse('$_apiURL/pilotos/$pilotoId'),
+      headers: {'Accept': 'application/json'},
+    );
+
+    return respuesta.statusCode == 204;
+  }
+
   Future<List<dynamic>> clasificacion() async {
     var respuesta = await http.get(Uri.parse('$_apiURL/pilotos/clasificacion'));
 
