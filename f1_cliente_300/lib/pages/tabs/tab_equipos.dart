@@ -1,6 +1,7 @@
 import 'package:f1_cliente_300/constants.dart';
 import 'package:f1_cliente_300/data/paises.dart';
 import 'package:f1_cliente_300/pages/equipo_detalle.dart';
+import 'package:f1_cliente_300/pages/equipo_editar.dart';
 import 'package:f1_cliente_300/services/f1_service.dart';
 import 'package:f1_cliente_300/utils/color_desde_hex.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,15 @@ class _TabEquiposState extends State<TabEquipos> {
                   motion: ScrollMotion(),
                   children: [
                     SlidableAction(
-                      onPressed: (_) {},
+                      onPressed: (_) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EquipoEditar(
+                            equipoId: equipo['id'],
+                            colorEquipo: colorEquipo,
+                          ),
+                        ),
+                      ).then((_) => setState(() {})),
                       backgroundColor: Colors.blue,
                       icon: MdiIcons.pen,
                       label: 'Editar',

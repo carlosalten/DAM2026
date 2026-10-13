@@ -55,6 +55,30 @@ class F1Service {
     return json.decode(respuesta.body);
   }
 
+  Future<LinkedHashMap<String, dynamic>> editarEquipo(
+    int equipoId,
+    String nombre,
+    String jefe,
+    String color,
+    String pais,
+  ) async {
+    var respuesta = await http.put(
+      Uri.parse('$_apiURL/equipos/$equipoId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode({
+        'nombre': nombre,
+        'jefe': jefe,
+        'color': color,
+        'pais': pais,
+      }),
+    );
+
+    return json.decode(respuesta.body);
+  }
+
   Future<LinkedHashMap<String, dynamic>> agregarPiloto(
     String nombre,
     String apellido,
