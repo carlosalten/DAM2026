@@ -19,6 +19,7 @@ class PilotoResource extends JsonResource
             'nombre' => $this->nombre,
             'apellido' => $this->apellido,
             'pais' => $this->pais,
+            'nacimiento' => $this->nacimiento?->format('Y-m-d'),
             'numero' => $this->numero,
             'puntos' => $this->puntos,
             'equipo_id' => $this->equipo_id,
