@@ -1,6 +1,7 @@
 import 'package:f1_cliente_300/constants.dart';
 import 'package:f1_cliente_300/pages/piloto_agregar.dart';
 import 'package:f1_cliente_300/services/f1_service.dart';
+import 'package:f1_cliente_300/utils/fechas.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
@@ -85,6 +86,7 @@ class _EquipoDetalleState extends State<EquipoDetalle> {
                             ),
                           ],
                         ),
+                        subtitle: Text(formatearFecha(piloto['nacimiento'])),
                         trailing: IconButton(
                           onPressed: () => showDialog(
                             barrierDismissible: false,

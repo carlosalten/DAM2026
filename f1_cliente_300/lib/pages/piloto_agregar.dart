@@ -1,7 +1,9 @@
 import 'package:f1_cliente_300/constants.dart';
 import 'package:f1_cliente_300/data/paises.dart';
 import 'package:f1_cliente_300/services/f1_service.dart';
+import 'package:f1_cliente_300/utils/fechas.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 class PilotoAgregar extends StatefulWidget {
   const PilotoAgregar({
@@ -25,6 +27,7 @@ class _PilotoAgregarState extends State<PilotoAgregar> {
   String? paisSeleccionado;
   bool guardando = false;
   Map<String, dynamic> errores = {};
+  DateTime nacimientoSeleccionado = DateTime.now();
 
   @override
   void dispose() {
@@ -98,6 +101,51 @@ class _PilotoAgregarState extends State<PilotoAgregar> {
                       ),
                       keyboardType: TextInputType.number,
                     ),
+                    SizedBox(height: 20),
+                    //fecha de nacimiento
+                    Row(
+                      children: [
+                        Text('Fecha de nacimiento: '),
+                        Text(
+                          formatearFecha(nacimientoSeleccionado.toString()),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Spacer(),
+                        IconButton(
+                          onPressed: () {
+                            showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1970),
+                              lastDate: DateTime.now(),
+                              initialDate: nacimientoSeleccionado,
+                              builder: (context, child) {
+                                return Theme(
+                                  data: Theme.of(context).copyWith(
+                                    colorScheme: ColorScheme.light(
+                                      primary: kPrimaryColor,
+                                      onPrimary: Colors.white,
+                                      surface: Colors.white,
+                                      onSurface: Colors.black,
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                            ).then((nacimiento) {
+                              if (nacimiento != null) {
+                                setState(() {
+                                  nacimientoSeleccionado = nacimiento;
+                                });
+                              }
+                            });
+                          },
+                          icon: Icon(
+                            MdiIcons.calendar,
+                            color: widget.colorEquipo,
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 10),
                     //pais
                     DropdownButtonFormField<String>(
@@ -141,6 +189,7 @@ class _PilotoAgregarState extends State<PilotoAgregar> {
                       int.tryParse(puntosCtrl.text.trim()) ?? -1,
                       paisSeleccionado ?? '',
                       widget.equipoId,
+                      nacimientoSeleccionado,
                     );
 
                     //si el usuario salió de la página

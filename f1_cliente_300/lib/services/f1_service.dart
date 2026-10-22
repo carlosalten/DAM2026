@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'package:f1_cliente_300/utils/fechas.dart';
 import 'package:http/http.dart' as http;
 
 class F1Service {
@@ -86,6 +87,7 @@ class F1Service {
     int puntos,
     String pais,
     int equipoId,
+    DateTime nacimiento,
   ) async {
     var respuesta = await http.post(
       Uri.parse('$_apiURL/pilotos'),
@@ -100,6 +102,7 @@ class F1Service {
         'puntos': puntos,
         'pais': pais,
         'equipo_id': equipoId,
+        'nacimiento': formatearFechaAPI(nacimiento),
       }),
     );
 
