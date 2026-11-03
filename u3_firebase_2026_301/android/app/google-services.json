@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "405399079869",
+    "project_id": "ca-dam-301-2026",
+    "storage_bucket": "ca-dam-301-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405399079869:android:d3728b348ff41ea8c1e0d4",
+        "android_client_info": {
+          "package_name": "cl.carlosalten.u3_firebase_2026"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRZ5DIuX2id_TDnBjCbDax5DDJGkuKvaQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
