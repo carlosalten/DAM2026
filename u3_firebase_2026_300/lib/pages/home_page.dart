@@ -12,6 +12,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   User? user;
+  final nombreCtrl = TextEditingController();
+  final precioCtrl = TextEditingController();
+  final stockCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -22,6 +25,20 @@ class _HomePageState extends State<HomePage> {
       });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    nombreCtrl.dispose();
+    precioCtrl.dispose();
+    stockCtrl.dispose();
+    super.dispose();
+  }
+
+  void limpiarForm() {
+    nombreCtrl.clear();
+    precioCtrl.clear();
+    stockCtrl.clear();
   }
 
   @override
@@ -71,6 +88,62 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                title: Text(
+                  'Agregar Producto',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue.shade700,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: Form(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: nombreCtrl,
+                        decoration: InputDecoration(labelText: 'Nombre'),
+                      ),
+                      TextFormField(
+                        controller: precioCtrl,
+                        decoration: InputDecoration(labelText: 'Precio'),
+                        keyboardType: TextInputType.number,
+                      ),
+                      TextFormField(
+                        controller: stockCtrl,
+                        decoration: InputDecoration(labelText: 'Stock'),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: Text('Cancelar'),
+                  ),
+                  FilledButton(
+                    onPressed: () {},
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    child: Text('Agregar Producto'),
+                  ),
+                ],
+              );
+            },
+          ).then((_) => limpiarForm());
+        },
+        backgroundColor: Colors.deepOrange,
+        foregroundColor: Colors.white,
+        child: Icon(Icons.add),
       ),
     );
   }
